@@ -66,7 +66,7 @@ export async function getProducts() {
   if (isSupabaseConfigured()) {
     try {
       const supabase = createServerSupabaseClient()
-      const { data, error } = await supabase.from("products").select("*").order("name")
+      const { data, error } = await (supabase.from("products") as any).select("*").order("name")
       if (!error && data && data.length > 0) return data
     } catch {
       // fallback
@@ -87,7 +87,7 @@ export async function createProduct(product: {
   if (isSupabaseConfigured()) {
     try {
       const supabase = createServerSupabaseClient()
-      const { data, error } = await supabase.from("products").insert(product).select().single()
+      const { data, error } = await (supabase.from("products") as any).insert(product).select().single()
       if (!error && data) return data
     } catch {
       // fallback
@@ -114,7 +114,7 @@ export async function updateProduct(id: string, patch: Record<string, unknown>) 
   if (isSupabaseConfigured()) {
     try {
       const supabase = createServerSupabaseClient()
-      const { data, error } = await supabase.from("products").update(patch).eq("id", id).select().single()
+      const { data, error } = await (supabase.from("products") as any).update(patch).eq("id", id).select().single()
       if (!error && data) return data
     } catch {
       // fallback
@@ -128,7 +128,7 @@ export async function deleteProduct(id: string) {
   if (isSupabaseConfigured()) {
     try {
       const supabase = createServerSupabaseClient()
-      await supabase.from("products").delete().eq("id", id)
+      await (supabase.from("products") as any).delete().eq("id", id)
     } catch {
       // fallback
     }
@@ -143,13 +143,13 @@ export async function getOrders() {
     try {
       const supabase = createServerSupabaseClient()
       const [ordersRes, itemsRes] = await Promise.all([
-        supabase.from("orders").select("*").order("created_at", { ascending: false }),
-        supabase.from("order_items").select("*"),
+        (supabase.from("orders") as any).select("*").order("created_at", { ascending: false }),
+        (supabase.from("order_items") as any).select("*"),
       ])
       if (!ordersRes.error && ordersRes.data && ordersRes.data.length > 0) {
-        return ordersRes.data.map((order) => ({
+        return ordersRes.data.map((order: any) => ({
           ...order,
-          items: (itemsRes.data ?? []).filter((item) => item.order_id === order.id),
+          items: (itemsRes.data ?? []).filter((item: any) => item.order_id === order.id),
         }))
       }
     } catch {
@@ -163,7 +163,7 @@ export async function updateOrderStatus(id: string, status: string) {
   if (isSupabaseConfigured()) {
     try {
       const supabase = createServerSupabaseClient()
-      const { data, error } = await supabase.from("orders").update({ status }).eq("id", id).select().single()
+      const { data, error } = await (supabase.from("orders") as any).update({ status }).eq("id", id).select().single()
       if (!error && data) return data
     } catch {
       // fallback
@@ -178,7 +178,7 @@ export async function getPayments(statusFilter?: string | null) {
   if (isSupabaseConfigured()) {
     try {
       const supabase = createServerSupabaseClient()
-      let query = supabase.from("payments").select("*").order("created_at", { ascending: false })
+      let query = (supabase.from("payments") as any).select("*").order("created_at", { ascending: false })
       if (statusFilter) query = query.eq("status", statusFilter)
       const { data, error } = await query
       if (!error && data && data.length > 0) return data
@@ -196,7 +196,7 @@ export async function updatePayment(id: string, patch: Record<string, unknown>) 
   if (isSupabaseConfigured()) {
     try {
       const supabase = createServerSupabaseClient()
-      const { data, error } = await supabase.from("payments").update(patch).eq("id", id).select().single()
+      const { data, error } = await (supabase.from("payments") as any).update(patch).eq("id", id).select().single()
       if (!error && data) return data
     } catch {
       // fallback

@@ -26,10 +26,14 @@ export function middleware(request: NextRequest) {
   }
 
   // Check for session cookie
+  const urlEnv = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const projectRef = urlEnv && urlEnv.includes("//") ? urlEnv.split("//")[1]?.split(".")[0] : null
+  const supabaseCookieName = projectRef ? `sb-${projectRef}-auth-token` : null
+
   const accessToken =
     request.cookies.get("sb-access-token")?.value ??
     request.cookies.get("admin-session")?.value ??
-    request.cookies.get(`sb-${process.env.NEXT_PUBLIC_SUPABASE_URL?.split("//")[1]?.split(".")[0]}-auth-token`)?.value
+    (supabaseCookieName ? request.cookies.get(supabaseCookieName)?.value : undefined)
 
   if (!accessToken) {
     // For API requests, return 401 JSON instead of redirecting to HTML page

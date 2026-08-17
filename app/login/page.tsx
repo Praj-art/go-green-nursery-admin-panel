@@ -10,7 +10,7 @@ function LoginForm() {
   const next = searchParams.get("next") ?? "/"
 
   const [email, setEmail] = useState("admin@gogreen.com")
-  const [password, setPassword] = useState("admin123")
+  const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)

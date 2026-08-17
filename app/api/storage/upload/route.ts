@@ -58,8 +58,7 @@ export async function POST(request: Request) {
 
     // Update product's image_url if product_id provided
     if (productId) {
-      const { error: updateError } = await supabase
-        .from("products")
+      const { error: updateError } = await (supabase.from("products") as any)
         .update({ image_url: publicUrl })
         .eq("id", productId)
 

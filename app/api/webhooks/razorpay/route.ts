@@ -41,23 +41,20 @@ export async function POST(request: Request) {
         const { razorpay_order_id, id: razorpay_payment_id, amount } = payment
 
         // Update payment record
-        await supabase
-          .from("payments")
+        await (supabase.from("payments") as any)
           .update({ status: "Paid", razorpay_payment_id })
           .eq("razorpay_order_id", razorpay_order_id)
 
         // Also accept the linked order
-        const { data: payRecord } = await supabase
-          .from("payments")
+        const { data: payRecord } = await (supabase.from("payments") as any)
           .select("order_id")
           .eq("razorpay_order_id", razorpay_order_id)
           .single()
 
-        if (payRecord?.order_id) {
-          await supabase
-            .from("orders")
+        if ((payRecord as any)?.order_id) {
+          await (supabase.from("orders") as any)
             .update({ status: "Accepted", pay_status: "Paid" })
-            .eq("id", payRecord.order_id)
+            .eq("id", (payRecord as any).order_id)
         }
 
         await sendAdminNotification({
@@ -71,27 +68,24 @@ export async function POST(request: Request) {
         const payment = event.payload.payment.entity
         const { razorpay_order_id, id: razorpay_payment_id } = payment
 
-        await supabase
-          .from("payments")
+        await (supabase.from("payments") as any)
           .update({ status: "Failed", razorpay_payment_id })
           .eq("razorpay_order_id", razorpay_order_id)
 
-        const { data: payRecord } = await supabase
-          .from("payments")
+        const { data: payRecord } = await (supabase.from("payments") as any)
           .select("order_id, amount")
           .eq("razorpay_order_id", razorpay_order_id)
           .single()
 
-        if (payRecord?.order_id) {
-          await supabase
-            .from("orders")
+        if ((payRecord as any)?.order_id) {
+          await (supabase.from("orders") as any)
             .update({ status: "Failed", pay_status: "Failed" })
-            .eq("id", payRecord.order_id)
+            .eq("id", (payRecord as any).order_id)
         }
 
         await sendAdminNotification({
           title: "❌ Payment Failed",
-          body: `Payment failed for order. ₹${(payRecord?.amount ?? 0)} not captured.`,
+          body: `Payment failed for order. ₹${((payRecord as any)?.amount ?? 0)} not captured.`,
         })
         break
       }
@@ -100,8 +94,7 @@ export async function POST(request: Request) {
         const refund = event.payload.refund.entity
         const { payment_id } = refund
 
-        await supabase
-          .from("payments")
+        await (supabase.from("payments") as any)
           .update({ status: "Refunded", refund: "Initiated" })
           .eq("razorpay_payment_id", payment_id)
 
@@ -114,8 +107,7 @@ export async function POST(request: Request) {
 
       case "refund.processed": {
         const refund = event.payload.refund.entity
-        await supabase
-          .from("payments")
+        await (supabase.from("payments") as any)
           .update({ refund: "Completed" })
           .eq("razorpay_payment_id", refund.payment_id)
         break

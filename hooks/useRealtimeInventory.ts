@@ -20,6 +20,7 @@ export function useRealtimeInventory(onEvent: RealtimeCallback) {
 
   useEffect(() => {
     const supabase = createClientSupabaseClient()
+    if (!supabase) return
 
     const channel = supabase
       .channel("realtime-inventory")

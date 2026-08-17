@@ -20,6 +20,7 @@ export function useRealtimeOrders(onEvent: RealtimeCallback) {
 
   useEffect(() => {
     const supabase = createClientSupabaseClient()
+    if (!supabase) return
 
     const channel = supabase
       .channel("realtime-orders")
