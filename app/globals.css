@@ -1,0 +1,116 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+}
+
+:root {
+  color-scheme: dark;
+  --background: oklch(0.16 0.02 155);
+  --foreground: oklch(0.96 0.02 150);
+  --card: oklch(0.2 0.025 155);
+  --card-foreground: oklch(0.96 0.02 150);
+  --popover: oklch(0.2 0.025 155);
+  --popover-foreground: oklch(0.96 0.02 150);
+  --primary: oklch(0.78 0.19 150);
+  --primary-foreground: oklch(0.16 0.02 155);
+  --secondary: oklch(0.26 0.03 155);
+  --secondary-foreground: oklch(0.96 0.02 150);
+  --muted: oklch(0.24 0.025 155);
+  --muted-foreground: oklch(0.68 0.03 150);
+  --accent: oklch(0.85 0.15 90);
+  --accent-foreground: oklch(0.16 0.02 155);
+  --destructive: oklch(0.6 0.2 25);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 14%);
+  --ring: oklch(0.78 0.19 150);
+  --radius: 0.75rem;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* --- 3D + animation utilities --- */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes float3d {
+  0%, 100% { transform: translateY(0) rotateX(0) rotateY(0); }
+  50% { transform: translateY(-10px) rotateX(4deg) rotateY(-4deg); }
+}
+@keyframes sway {
+  0%, 100% { transform: rotate(-4deg); }
+  50% { transform: rotate(4deg); }
+}
+@keyframes grow-bar {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}
+
+.animate-rise { animation: rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.animate-float3d { animation: float3d 6s ease-in-out infinite; }
+.animate-sway { animation: sway 4s ease-in-out infinite; transform-origin: bottom center; }
+.animate-grow-bar { animation: grow-bar 0.8s cubic-bezier(0.22, 1, 0.36, 1) both; transform-origin: bottom; }
+
+@keyframes grow-bar-x {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+.animate-grow-bar-x { animation: grow-bar-x 0.9s cubic-bezier(0.22, 1, 0.36, 1) both; transform-origin: left; }
+
+.perspective-1200 { perspective: 1200px; }
+.preserve-3d { transform-style: preserve-3d; }
+
+.card-3d,
+.tilt-card {
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease;
+  transform-style: preserve-3d;
+}
+.tilt-card:hover {
+  transform: rotateX(2deg) rotateY(-2deg) translateY(-3px);
+  box-shadow:
+    0 16px 36px -16px oklch(0.78 0.19 150 / 20%),
+    0 4px 12px -4px oklch(0 0 0 / 40%);
+}
+.card-3d:hover {
+  transform: rotateX(6deg) rotateY(-6deg) translateY(-6px) scale(1.02);
+  box-shadow:
+    0 24px 48px -16px oklch(0.78 0.19 150 / 25%),
+    0 4px 12px -4px oklch(0 0 0 / 40%);
+}
+.card-3d-alt:hover {
+  transform: rotateX(6deg) rotateY(6deg) translateY(-6px) scale(1.02);
+}
